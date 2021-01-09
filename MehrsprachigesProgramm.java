@@ -30,7 +30,6 @@ d
   
  */
 
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ChoiceFormat;
 import java.text.DateFormat;
@@ -51,15 +50,8 @@ public class MehrsprachigesProgramm {
 		String sprache = sc.next();
 
 		Locale countryLocale = Locale.GERMANY;
-		switch(sprache) {
-			// case "deutsch" can be omittet as countryLocale is already set to Locale.GERMANY
-			case "francais":
-				countryLocale = Locale.FRANCE;
-				break;
-			case "english":
-				countryLocale = Locale.UK;
-				break;
-		}
+		countryLocale = selectCountryLocale(sprache);
+		
 		  
 		//resource file name: prompt_en.properties, prompt_de.properties, prompt_fr.properties
 
@@ -81,8 +73,8 @@ public class MehrsprachigesProgramm {
 		System.out.println(String.format(bundle.getString("Time"), LocalTime.now()));
 		boolean weiter = true;
 		do {
-			System.out.print(bundle.getString("ProjectDetails") + "\n");
-			System.out.print(bundle.getString("ProjectManager") + " \n");
+			System.out.println(bundle.getString("ProjectDetails"));
+			System.out.println(bundle.getString("ProjectManager"));
 			String projektLeiter = sc.next();
 			System.out.println(
 				bundle.getString("IsFemale") 
@@ -154,9 +146,22 @@ public class MehrsprachigesProgramm {
 			sprache = sc.next();
 			if (sprache.equals(bundle.getString("No"))) {
 				weiter = false;
-			} 
+			} else {
+				countryLocale = selectCountryLocale(sprache);
+				bundle = ResourceBundle.getBundle(baseName, countryLocale);
+			}
 		} while (weiter == true);
 		sc.close();
 		System.out.println(bundle.getString("Bye"));
+	}
+
+	private static Locale selectCountryLocale(String sprache) {
+		switch(sprache) {
+			case "francais":
+				return Locale.FRANCE;
+			case "english":
+				return Locale.UK;
+		}
+		return Locale.GERMANY;
 	}
 }
