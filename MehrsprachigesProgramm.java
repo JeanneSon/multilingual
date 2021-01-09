@@ -1,5 +1,4 @@
 
-
 /*
 d
   Dieses Programm ist vom Ansatz her ein mehrsprachiges Programm. Es sollte zwischen den Sprachen 
@@ -30,7 +29,10 @@ d
 	anderen Abh�ngigkeiten haben. 
   
  */
-  
+
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.text.ChoiceFormat;
 import java.text.DateFormat;
 import java.time.LocalTime;
 import java.util.Date;
@@ -42,35 +44,27 @@ import java.text.NumberFormat;
 
 public class MehrsprachigesProgramm {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnsupportedEncodingException {
 		ResourceBundle bundle = null; 
 		System.out.println("deutsch francais english");
 		Scanner sc = new Scanner(System.in);
 		String sprache = sc.next();
 
-		String language = "DEFAULT";
+		Locale countryLocale = Locale.GERMANY;
 		switch(sprache) {
-			case "deutsch":
-				language = "de";
-			  	break;
+			// case "deutsch" can be omittet as countryLocale is already set to Locale.GERMANY
 			case "francais":
-				language = "fr";
+				countryLocale = Locale.FRANCE;
 				break;
 			case "english":
-				language = "en";
+				countryLocale = Locale.UK;
 				break;
 		}
 		  
 		//resource file name: prompt_en.properties, prompt_de.properties, prompt_fr.properties
 
 		String baseName = "prompt";
-		Locale currentlocale = new Locale(language);
-		if (language.equals("DEFAULT")) {
-			bundle = ResourceBundle.getBundle(baseName);
-		}
-		else {
-			bundle = ResourceBundle.getBundle(baseName, currentlocale);
-		}
+		bundle = ResourceBundle.getBundle(baseName, countryLocale);
 
 		System.out.println(bundle.getString("InputName") + ": ");
 		
@@ -78,11 +72,13 @@ public class MehrsprachigesProgramm {
 		System.out.println(
 			String.format(
 				bundle.getString("ImportantDay"), 
-				DateFormat.getDateInstance(DateFormat.FULL, currentlocale).format(new Date()).toString(), 
+				DateFormat.getDateInstance(DateFormat.FULL, countryLocale).format(new Date()).toString(), 
 				name
 			)
 		);
-		System.out.println("Es ist " + String.format("%tR", LocalTime.now()) + " Uhr");
+
+
+		System.out.println(String.format(bundle.getString("Time"), LocalTime.now()));
 		boolean weiter = true;
 		do {
 			System.out.print(bundle.getString("ProjectDetails") + "\n");
@@ -99,34 +95,54 @@ public class MehrsprachigesProgramm {
 			}
 			int anzahlProjekte = sc.nextInt();
 			if (geschlecht.equals("maennlich")) {
-				System.out.print(bundle.getString("Mister") + " " + projektLeiter); //CHOICE-FORMAT???
+				System.out.print(bundle.getString("Mister") + " " + projektLeiter + " "); //CHOICE-FORMAT???
 			} else {
-				System.out.print(bundle.getString("Mrs") + " " + projektLeiter);
+				System.out.print(bundle.getString("Mrs") + " " + projektLeiter + " ");
 			}
 			if (anzahlProjekte == 0) {
-				System.out.println(" hat bislang keine Projekte gemacht.");
+				System.out.println(
+					String.format(bundle.getString("ProjectsDone"), 
+									bundle.getString("None"), 
+									bundle.getString("Plural")
+					)
+				);
 			} else if (anzahlProjekte == 1) {
 				System.out.println(
 					String.format(
 						bundle.getString("ProjectsDone"),
-						bundle.getString("One")
+						bundle.getString("One"),
+						bundle.getString("Singular")
 					)
 				);
 			} else {
-				System.out.println(" hat bislang " + anzahlProjekte + " Projekte gemacht");
+				System.out.println(
+					String.format(
+						bundle.getString("ProjectsDone"),
+						anzahlProjekte,
+						bundle.getString("Plural")
+					)
+				);
 			}
-			System.out.print("Wie hoch ist das Projektbudget?\n");
+			System.out.println(bundle.getString("Budget"));
 			double projektBudget = sc.nextDouble();
-			System.out.println("Wieviel ist vom Projektbudget schon aufgebraucht?");
+			System.out.println(bundle.getString("BudgetSpent"));
 			double ausgegeben = sc.nextDouble();
 			double prozent = ausgegeben / projektBudget;
 
-			NumberFormat nf1 = NumberFormat.getCurrencyInstance(currentlocale);
-			System.out.println("projektBudget : " + nf1.format(projektBudget));
+			NumberFormat nf1 = NumberFormat.getCurrencyInstance(countryLocale);
+			System.out.println(bundle.getString("ProjectBudget") + " : " + nf1.format(projektBudget));
+			
+			NumberFormat prozentFormat = NumberFormat.getPercentInstance(countryLocale);
+			prozentFormat.setMinimumFractionDigits(2);
 
 			System.out.println(
-					"Vom Gesamtbudget in Hohe von " + projektBudget + " � sind bereits " + prozent + "% ausgegeben.");
-
+					String.format(
+						bundle.getString("BudgetSummary"),
+						nf1.format(projektBudget),
+						prozentFormat.format(prozent)
+					)
+			);
+					
 			System.out.println(name + ", " + bundle.getString("ChangeLanguage"));
 			System.out.print(
 				String.format(
@@ -136,7 +152,7 @@ public class MehrsprachigesProgramm {
 				) + ":\t"
 			);
 			sprache = sc.next();
-			if (sprache.equals("nein")) {
+			if (sprache.equals(bundle.getString("No"))) {
 				weiter = false;
 			} 
 		} while (weiter == true);
