@@ -1,0 +1,31 @@
+ERKLAERUNG
+°°°°°°°°°°
+
+Wir haben die runnable jar in der VM der Htw erstellt (centOS8).
+
+1)  In einen Ordner "MehrsprachigesProgramm.java" und die drei Properties-Dateien ablegen. 
+    Der Ordner enthaelt sonst keine Dateien.
+
+2)  Class-Datei aus "MehrsprachigesProgramm.java" erstellen mit "javac *java".
+
+3)  "MehrsprachigesProgramm.java" aus dem Ordner entfernen.
+
+4)  Damit "Main" wieder gefunden wird, geben wir an, wo sie zu finden ist.
+    Dazu erstellen wir die Datei "Manifest.mf". Diese Datei enthaelt:
+
+Manifest-version: 1.0
+Main-Class: MehrsprachigesProgramm
+
+5)  Unser Ordner enthaelt nun "MehrsprachigesProgramm.class", die drei Properties-Dateien
+    und "Manifest.mf".
+
+7)  Mittels "jar" kann nun eine runnable Jar erstellt werden:
+    "jar cfm MehrsprachigesProgramm.jar *"
+
+    "c" steht für "Create a new JAR archive."
+    "f" bewirkt, dass JAR file nicht in stdout geleitet wird, sondern gespeichert wird.
+    "m" zeigt an, dass eine Manifest-Datei bei der Erstellung der JAR-Datei berücksichtigt
+        werden soll.
+
+8)  In jedem beliebigen Verzeichnis kann nun die JAR-Datei ausgeführt werden mittels
+    "java -jar MehrsprachigesProgramm.jar".
