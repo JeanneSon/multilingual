@@ -1,7 +1,6 @@
 ERKLAERUNG
 °°°°°°°°°°
 
-Wir haben die runnable jar in der VM der Htw erstellt (centOS8).
 
 1)  In einen Ordner "MehrsprachigesProgramm.java" und die drei Properties-Dateien ablegen. 
     Der Ordner enthaelt sonst keine Dateien.
@@ -29,3 +28,5 @@ Main-Class: MehrsprachigesProgramm
 
 8)  In jedem beliebigen Verzeichnis kann nun die JAR-Datei ausgeführt werden mittels
     "java -jar MehrsprachigesProgramm.jar".
+
+weiterführende Hinweise: https://stackoverflow.com/questions/1238145/how-to-run-a-jar-file

@@ -30,8 +30,6 @@ d
   
  */
 
-import java.io.UnsupportedEncodingException;
-import java.text.ChoiceFormat;
 import java.text.DateFormat;
 import java.time.LocalTime;
 import java.util.Date;
@@ -43,7 +41,7 @@ import java.text.NumberFormat;
 
 public class MehrsprachigesProgramm {
 
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	public static void main(String[] args) {
 		ResourceBundle bundle = null; 
 		System.out.println("deutsch francais english");
 		Scanner sc = new Scanner(System.in);
@@ -51,6 +49,9 @@ public class MehrsprachigesProgramm {
 
 		Locale countryLocale = Locale.GERMANY;
 		countryLocale = selectCountryLocale(sprache);
+
+		// if english: Enter decimal point-separated (e.g. 5.3); else: comma-seperated (e.g. 5,3)
+		sc.useLocale(countryLocale);
 		
 		  
 		//resource file name: prompt_en.properties, prompt_de.properties, prompt_fr.properties
@@ -68,7 +69,6 @@ public class MehrsprachigesProgramm {
 				name
 			)
 		);
-
 
 		System.out.println(String.format(bundle.getString("Time"), LocalTime.now()));
 		boolean weiter = true;
@@ -149,6 +149,7 @@ public class MehrsprachigesProgramm {
 			} else {
 				countryLocale = selectCountryLocale(sprache);
 				bundle = ResourceBundle.getBundle(baseName, countryLocale);
+				sc.useLocale(countryLocale);
 			}
 		} while (weiter == true);
 		sc.close();
